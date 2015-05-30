@@ -20,8 +20,8 @@ reite
 
 ////////////////////
 
-val miAnimal: Animal = new Vaca
 val miVaca: Vaca = new Vaca
+val miAnimal: Animal = miVaca
 
 mivaca.orderniate #ok!
 mianimal.ordeniate #en tiempo de compilacion no lo entiende!!
@@ -64,7 +64,6 @@ object corrales{
 }
 
 object setDeAnimalesVsVacas {
-	val unaVaca : Vaca = new Vaca
 	
 	var vacas: Set[Vaca] = ??
 	var animales : Set[Animal]  = vacas
@@ -157,3 +156,5 @@ object corrales{
 	pastor.pastorear(corralito.animales)
 }
 
+
+La lista es inmutable, porque entre los mensajes que nos provee es inmutable.

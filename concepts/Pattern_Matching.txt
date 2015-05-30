@@ -1,0 +1,94 @@
+Pattern Matching
+---------------
+#Patter Matching --> tiene que ser inmutable los objetos del pattern Matching
+#Busca la primer guarda que matchee
+
+Conceptos:
+* Objetos
+* Patrones
+* Funciones
+* Tipos
+* Case Class
+
+# Patrones: Tipo que construccion utilizada para machear
+Ej case _ 
+Ej case B: b
+Ej case A() // Si aplica unnaply
+
+def saraza(t_:T): Int = t match {
+	#
+	case A(0,0,0) 	=> 0
+
+	#Aplico unapply 		#Aplico Apply
+	#Aplico alias: "unaA"
+	case unaA @ A(_) 				=> A(n).duplicar(2)
+	
+
+	case b: b 				=> b.triplicar(3)
+	case _					=> 0
+}
+
+def mapear [T, U](list: List[T], f: T => U) : List[U] = list match
+	case Nil => Nil
+	case x:xs => f(x):: mapear(xs, f)
+}
+
+#Un Objeto A que se llama igual que la clase A (no tienen nada que ver entre sí)
+object A{
+	#Mensaje que permite construir un mensaje. Despues puedo usar("A(0)"")
+	def apply(n: Int) = new A(n)
+
+	#Clase para deconstruir
+	#Permite matchear A(0)
+	# Cualquier objeto que defina un unapply es un patron
+	def unapply(a: A): Option[(Int, Int, Int)] = Some((a.n, a.n, a.n))
+}
+
+## Recordemos que la clases en Scala NO son object
+class A(val n:Int) extends T {
+	def duplicar(i: Int) = i * n + 1
+}
+
+------------
+case class
+-----------
+# Tipo de clase que automaticamente me implementa ciertos mensaje.
+# Apply y Unnaply viene aplicados
+# El Objeto A viene SOLO aplicado.
+# Igualdad y hashCode definida tambien.
+
+# No puede ser subclaseado.
+
+case class A(n: Int) extend T{
+	def duplicar(i: Int) = i * n + 1
+}
+
+
+------------
+case Object
+-----------
+# Object -> Objeto sueltos sin que haya una clase-
+# No tiene clase
+# No tiene constructor
+
+# caseObject -> define un Objecto B y agrega apply/unapply/
+
+case Object XX{
+	def triplicar(i: Int) = i * 3
+}
+
+
+def saraza(t: T): Int = t match{
+	case A(0)
+	case unaA @ A(_) => (unaA.n, unaA.duplicar(unaA.n)) match {
+		case(_, 5) => 3
+		case(_, 3) => 3
+	}
+}
+
+
+------------
+sealed trait
+-----------
+Trait que se define en la spreadsheet y termina ahi.
+

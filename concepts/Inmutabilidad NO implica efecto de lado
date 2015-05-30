@@ -1,0 +1,40 @@
+Inmutabilidad NO implica efecto de lado
+
+Es inmutable
+Corral[T < Animal](val animal: List[T])
+
+
+Es mutable
+Corral[T < Animal](var animal: List[T])
+
+corral.animal.forEach{ a => a.morir}
+
+La lista es inmutable, los elementos de la lista no.
+
+
+
+Escenario:
+---------
+Microprocesador ejecuta instrucciones
+
+Mutabilidad:
+-----------
+
+Micro -> Instruccion1 -> Micro(con nuevo estaod) --> Instruccion2 -> Micro(Nuevo Estado)
+
+Que pasa si tengo que rollbackear Instruccion2?
+Dificilisimo porque el Micro tiene estado
+
+Inmutabilidad:
+-------------
+
+Microprocesador --> Instruccion1 --> Microprocesador1 -> Instruccion2 -> Microprocesador2
+
+Que pasa si tengo que rollbackear Instruccion2?
+Facil, devuevlo Instruccion 2.
+
+
+
+-------------------------------------------------------------
+Otra cosa -- EXCEPTIONS CAGAN LA TRANSPARENCIA REFERENCIAl
+-------------------------------------------------------------
