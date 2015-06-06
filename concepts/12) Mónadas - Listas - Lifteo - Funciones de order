@@ -1,0 +1,145 @@
+12) Mónadas - Listas - Lifteo - Funciones de order Superior - For Comprehension
+
+Lifteo
+......
+
+Nota #: 12
+
+--------------------------
+Lista
+--------------------------
+Const(:) // Constructor 1
+Nill([]) // Lista Vacia
+--------------------------
+isNil	
+head
+tail
+
+--------------------------
+Maybe / Opt[T]
+--------------------------
+Some :: T -> Opt[T]
+None :: Opt[T] -> Bool
+----------------
+isNone:: Opt[T] -> Bool
+get :: Opt[T] -> T
+--------------------------
+
+--------------------------------
+Error / Try[T]
+--------------------------------
+Success :: T -> Try[T]
+Fail :: Try[T]
+--------------------------------
+isSuccess :: Try[T] -> Boolean
+get:: Try[T] -> T
+-------------------------------
+
+
+map - funciones
+---------------
+
+map f lista = 	if (isNil lista)
+				then Nil
+				else f(head lista): map f (tail lista)
+
+
+map - pattern Matching:
+-----------------------
+
+map _ [] =  []
+map f (x:xs) = f x : map f xs
+
+
+--------------> Queremos salir de pattern-matching a estructuras superiores <----------------
+
+FUNCIONES DE ORDEN SUPERIOR :
+---------------------------
+
+No queremos tener que entrar a la lista para saber si es Nill o si es una lista de cosas.
+
+lista -> aplico funcion que se aplica a c/ elemento de la lista -> otra lista(con la funcion aplicada a los elementos de la misma)
+
+map (paso una funcion)
+
+............
+	Shifteo : 
+............
+
+Ejemplo: Tengo una caja de bolitas.
+
+CAJA -> FUNCION -> CAJA
+
+* map: abre, aplica f y cierra la cajita.
+	>> Puede recibir opt[T], Try[T] -> abre cajita, aplica, devuelve cajita
+
+* filter: abre, se queda con los que cumplen f y cierra.
+	>> Try[2] f(esPar?) --> Try[2]
+	>> Try[2] f(esImpar?) --> Fail(con error bien conocida.)
+
+* flatMap: abre, aplica f y abre el resultado y lo mete en otra caja
+	# flat = aplanar: De una lista[lista[lista]] -> lista
+	>> Con opt[T] -> abre cajita, aplica, devuelve cajita
+
+
+** fold: Abre la caja 	-> si esta vacia 	-> devuelve la semilla
+						-> si no esta vacia -> sino usa f para convertir el contenido -> semilla
+	parametro 1: funcion
+	parametro 2: semilla (devuelve el semilla en caso de ser Nill)
+
+	# FOLD: Es la unica operacion que permite De una caja -> devolver una semilla
+			-> FOLD es la forma de salir de la caja de forma elegante. Va al final del shifteo
+			-> El objetivo del Fold es romper la cajita.
+
+	# FOLD: Esta implementado como continuation
+
+	fold 0 (+) ns + 2
+
+	>> Con opt[T] -> abre cajita, aplica, devuelve cajita
+
+
+
+Ventaja Option[T] VS NULL
+-------------------------
+Con Option[T] puedo seguir trabajando y aplicando operaciones.
+
+
+Diferencias entre Try Vs Option
+-------------------------------
+Try:: me permite recueperarme del error
+
+* find :: [T] -> (T -> Bool) -> Opt[T]
+	# Si encuentra 		-> devuelve un [T]
+	# Si no encuentra 	-> devuelve None
+
+	# alumnos.find(_capo).map(_.ayudante)
+
+>> Esto nos permite componer las funciones una despues de otra.
+
+
+FlatMap vs Map
+--------------
+
+Degenera en anidamiento
+
+caja otraCajaC3 = caja.flatMap{
+								x =>
+									otraCaja.flatMap{ y=>
+										caja3.map {
+											z => x + y+ z
+										}
+
+									}
+								}
+
+For Comprehension:
+------------------
+
+for (x <- caja if even x) print(x);
+
+Javascript:
+for{
+	x <- caja
+	y <- otraCaja
+	z <- c3
+} yield x+y+z

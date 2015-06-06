@@ -1,0 +1,42 @@
+10) Recursividad - Folding
+
+Nota #:10
+
+Microprocesador-analisis
+-------------------------
+
+git clone https://github.com/uqbar-paco/tadp-2015c1-scala-microprocesador-clase
+
+Version-functional-inmutable:
+-----------------------------
+
+Ejercicio) Microprocesador queremos hacer un div...
+			a) Tiramos una excepcion?
+			b) Creamos un tipo de "resultadoError"?
+			c) Y si devolvemos Null?
+
+Rta b) Creamos un tipo de resultado Error.
+
+Multiplexando el tipo de resultado, uno genera distintos estados de salida.
+
+La excepcion llega hasta arriba, tiene efecto de lado, no tenes transparencia referencial, ni inmutabilidad. LA EXCEPCION BURBUJEA hasta donde la manejo.
+
+Null tiene una naturaleza destructiva. Null no es de ningun tipo. 
+
+
+Problema que tiene es que siempre tenes que ir preguntando si es Ejecutando.
+
+-> Reemplazar la recursividad con un fold. Recorro con cabeza:cola-> 
+Fold:: (cabeza:cola)
+
+http://en.wikipedia.org/wiki/Fold_(higher-order_function)
+
+objecto.foldLeft(objeto){
+	
+}
+
+programa.foldLeft(Ejecutando(micro): ResultadoDeEjecucion){
+	
+}
+
+-> Esta solucion no tiene un corte

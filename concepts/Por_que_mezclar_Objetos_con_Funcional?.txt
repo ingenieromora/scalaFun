@@ -1,4 +1,6 @@
-Por que mezclar Objetos con Funcional?
+11) Por que mezclar Objetos con Funcional?
+
+Nota #: 11
 
 *) Intro: Conceptos de objetos / Funcional
 
