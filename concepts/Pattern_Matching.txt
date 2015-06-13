@@ -15,6 +15,36 @@ Ej case _
 Ej case B: b
 Ej case A() // Si aplica unnaply
 
+
+# def funcion (parametro: Niveles) = {
+    //cualquier cosa
+
+    parametro match:{
+        #deconstruyo            #construyo
+        case tupla@(_, _, _) => (tupla._3, tupla._2, tupla._1)
+    }
+
+    //cualquier cosa
+}
+
+
+# Examples
+def invertir (caracteristicas: Niveles) = {
+    caracteristicas match:{
+            #deconstruyo            #construyo
+        case tupla@(_, _, _) => (tupla._3, tupla._2, tupla._1)
+    }
+}
+
+def invertir(caracteristicas: Niveles) = {
+    object x {
+        def unapply(bla: Niveles) = Some((bla._1, bla._2, bla._3))
+    }
+
+    val (ns, nc, nf) = caracteristicas
+    (nf, nc, ns)
+}
+
 def saraza(t_:T): Int = t match {
 	#
 	case A(0,0,0) 	=> 0
@@ -34,6 +64,7 @@ def mapear [T, U](list: List[T], f: T => U) : List[U] = list match
 }
 
 #Un Objeto A que se llama igual que la clase A (no tienen nada que ver entre sí)
+
 object A{
 	#Mensaje que permite construir un mensaje. Despues puedo usar("A(0)"")
 	def apply(n: Int) = new A(n)
@@ -91,4 +122,16 @@ def saraza(t: T): Int = t match{
 sealed trait
 -----------
 Trait que se define en la spreadsheet y termina ahi.
+
+
+------------
+unaply
+------------
+
+object x{
+    def unapply(bla: Int) =
+        Some((bla, bla, bla))
+}
+
+val x(a, b, c) = 1
 

@@ -1,0 +1,31 @@
+-----------------------------------------
+Implicit => magia de compilador de Scala
+------------------------------------------
+
+* Implicit Class
+
+* Implicit Method
+
+* Implicit Parameters
+
+
+* Implicit Class
+    => En tiempo de compilacion
+    => Tiene que recibir un unico parametro de clase
+    => Siempre y cuando la clase no entienda el mensaje.
+    => Es una forma de extender las clases.
+    => Es como un missing method en tiempo de compilacion.
+
+implicit class Bla[A,B] (f: A => B ){
+    def °[C] (g: C => A): C => B = f.compose(g)
+    def <-| [C] (g: C => A): C => B = f.compose(g)
+}
+
+// Hacer esto:
+val diferenciaNiveles : Niveles => Int = {
+    case (s,c,fuerza) =>
+        (max2(s) _ ° max2(c))(fuerza)
+            - (min2(s) _ ° min2(c))(fuerza)
+}
+
+// Es lo mismo que hacer:

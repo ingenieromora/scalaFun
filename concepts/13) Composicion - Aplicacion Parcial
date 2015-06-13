@@ -1,0 +1,118 @@
+
+
+-------------
+Type Alias
+-------------
+
+#Alias que  me ayuda a que se vea mejor
+
+type Niveles = (Int, Int, Int)
+type Efecto = Niveles => Niveles
+
+-------------
+Unapply
+-------------
+
+val f1: Efecto =
+{ case(s,c,f) => (s+1, c+1, f+1)}
+
+---------------
+Order Superior
+--------------
+Generalidades
+Llamamos a una determinada operación de orden superior si la misma recibe otra operación
+(comportamiento) por parámetro, siendo capaz de ejecutarla internamente.
+
+Al usar orden superior tenemos las siguientes ventajas:
+
+1- Puedo aislar y reutilizar comportamiento común.
+2- Puedo partir mi problema, separando responsabilidades, entre el código que tiene orden superior,
+y el comportamiento parametrizado.
+3- Puedo tener un código con partes incompletas, esperando rellenarlos pasando comportamiento
+por parámetro, y no sólo datos.
+4- ¡Puedo generar abstracciones más jugosas! Más allá de las abstracciones de orden superior que
+ya me proveen los lenguajes, la mayoría de los mismos me dan la posibilidad de armar mi propio
+comportamiento de orden superior
+(En la materia lo vemos en Haskell más directamente, aunque se puede también en SWI-Prolog).
+Con abstracciones más adecuadas, con responsabilidades repartidas, y sin repetición de lógica,
+genero un código más expresivo (porque en general es más fácil de leer), y
+más declarativo (porque en general al usar orden superior oculto detalles algorítmicos)
+
+------------------
+Aplicacion Parcial
+------------------
+
+-- Por aplicación parcial se entiende a la aplicación de una función,
+-- pero suministrando menos parámetros que los que esta requiere.
+-- El resultado de aplicar parcialmente una función es otra función que
+-- espera menos parámetros que la original, ya que puede realizar reemplazos en su
+-- definición por expresiones o valores concretos.
+-- La aplicación parcial es muy útil para componer funciones y para parametrizar
+-- funciones de Orden Superior.
+
+* Motivacion: Cambiar la forma de una funcion. Algo que recibe 2 parametros numericos, en uno.
+
+max :: Num a => a => a => a => a
+
+max 1 // max 1 :: Int -> Int
+
+f:: (Int -> Int) -> c
+f g
+
+-- Curring es aplicacion parcial
+
+
+-- Scala currifica todos sus parametros.
+
+type Niveles = (Int, Int, Int)
+type Efecto = Niveles => Niveles
+
+
+def aplicar3(f: Int => Int)(niveles: Niveles) =
+    (f(niveles._1), f(niveles._2), f(niveles._3))
+
+
+val f2: Efecto =
+                aplicar3(max(7,_))(_)
+
+--> Lo interesante es que puedo hacer:
+
+def metodo2 :: Int => Int => Int
+
+def metodo2 (v1:Int , v2:Int) : Int = {}
+
+def metodo2 (v1:Int)(v2:Int) : Int = {}
+
+llamarlo
+
+val result = metodo (2)(3)
+
+#Aqui se ve la aplicacion parcial
+val f = metodo(2)
+f(3)
+
+------------
+Composicion de funciones
+-------------
+
+// Se lee de derecha a izquierda
+
+val diferenciaNiveles: Niveles => Int = {
+    // Motivacion:
+    //  max(max(s,c), fuerza) - min(min(s, c), fuerza)
+    // Forma 1
+    case(s,c,fuerza) =>
+        (max _).curried(s).compose(
+            (max _).curried(c)) (fuerza)
+    // Forma 2
+    val g = (max 2(s) _).compose(max2(c))
+    g(f)
+    // Forma 3
+    val g = (max2(s) _).andThen(max2(c))
+    g(f)
+}
+
+
+** No se usa tanto en Scala porque al tener la parte Objetosa disponible. La objetosa es mas clara:
+** Es mas simple:
+*** s.max(c).max(f) - s.min(c).min(f)
