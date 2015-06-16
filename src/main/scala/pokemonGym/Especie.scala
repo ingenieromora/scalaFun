@@ -24,5 +24,11 @@ object Especie {
   def Ratata() = {
     Especie(1, 1, Normal, null, 1, 1, 1, 1)
   }
+  def Monkey() = {
+	  Especie(25, 6, Pelea, null, 3, 4, 5, 6)
+  }
+  def Gengar() = {
+	  Especie(390, 1, Fantasma, null, 45, 45, 50, 60)
+  }
   
 }
