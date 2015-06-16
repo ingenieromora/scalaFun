@@ -10,5 +10,4 @@ class HelloTest extends FunSuite{
     val hello = new Hello
     assert(hello.sayHello("World") == "Hello World")
   }
-
 }
