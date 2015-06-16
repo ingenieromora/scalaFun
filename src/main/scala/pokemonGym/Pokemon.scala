@@ -69,5 +69,4 @@ case class Pokemon(
   }
   
   def aumentarEnergiaAlMaximo() : Pokemon = copy(energia = energiaMaxima)
-    
 }

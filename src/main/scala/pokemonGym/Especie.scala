@@ -30,5 +30,14 @@ object Especie {
   def Gengar() = {
 	  Especie(390, 1, Fantasma, null, 45, 45, 50, 60)
   }
+  def Magikarp() = {
+	  Especie(20, 20, Agua, null, 30, 30, 30, 5)
+  }
+  def Poliwhirl() = {
+	  Especie(20, 20, Psiquico, Agua, 30, 30, 30, 5)
+  }
+  def Deeglet() = {
+    Especie(10, 10, Tierra, null, 10, 10, 10, 5)
+  }
   
 }

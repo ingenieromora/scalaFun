@@ -56,8 +56,23 @@ package object gim {
             }
           }
         }
+        case Nadar(minutos) => {
+          //TODO TipoSecundario
+          (estadoActual.flatMap { poke => poke.especie match {
+            case Especie(_, _, Agua, _, _, _, _, _) | Especie(_, _, _, Agua, _, _, _, _) => estadoActual.map{ poke => poke.copy(energia = poke.energia - minutos, 
+              experiencia = poke.experiencia + 200*minutos, 
+              velocidad = poke.velocidad+(minutos/60)) }
+            case Especie(_, _, Roca, _, _, _, _, _) | 
+                 Especie(_, _, _, Roca, _, _, _, _) | 
+                 Especie(_, _, Tierra, _, _, _, _, _) | 
+                 Especie(_, _, _, Tierra, _, _, _, _) | 
+                 Especie(_, _, Fuego, _, _, _, _, _) | 
+                 Especie(_, _, _, Fuego, _, _, _, _) => KO(poke) 
+            case _ => estadoActual.map{ poke => poke.copy(energia = poke.energia - minutos, 
+              experiencia = poke.experiencia + 200*minutos)}
+          }})
+        }
       }
-      
       estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())
     }}
   }
