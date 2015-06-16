@@ -3,41 +3,41 @@ package pokemonGym
 /**
  * @author seb
  */
-import java.rmi.activation.Activatable
 package object gim {
   
-  case class ResultadoDeActividad(val pokemon: Pokemon) {
-    def map(f: (Pokemon => Pokemon)) = ResultadoDeActividad(f(pokemon))
-  }
-  
-  def ejecutar(pokemon: Pokemon, listaDeActividades: Actividad*): ResultadoDeActividad = {
-    listaDeActividades.foldLeft(ResultadoDeActividad(pokemon)) { (resultadoAnterior, actividadActual) => {
+  def ejecutar(pokemon: Pokemon, listaDeActividades: Actividad*): Estado = {
+    listaDeActividades.foldLeft(OK(pokemon) : Estado) { (resultadoAnterior, actividadActual) => {
+
+      val estadoActual =  resultadoAnterior match {
+        case a @ OK(pok) => OK(pok)
+        case a @ KO(pok) => KO(pok)
+        case a @ Dormido(pok, 0) => OK(pok)
+        case a @ Dormido(pok, cont) => Dormido(pok, cont - 1)
+      }
       
-      resultadoAnterior.map((pokemon) =>
-        actividadActual match {
-          case RealizarAtaque(ataque @ Ataque(tipo, puntos, efecto)) =>
-            if (puntos > 0 && pokemon.conoceAtaque(ataque)) {
-              var poke = tipo match {
-                case Dragon =>
-                  pokemon.ganarExperiencia(80)
-                case resultadoAnterior.pokemon.especie.tipoPrincipal =>
-                  pokemon.ganarExperiencia(50)
-                case resultadoAnterior.pokemon.especie.tipoSecundario =>
-                  pokemon.genero match {
-                    case 'F' =>
-                      pokemon.ganarExperiencia(40)
-                    case 'M' =>
-                      pokemon.ganarExperiencia(20)
-                  }
+      val estadoDespuesDeActividad = actividadActual match {
+        case RealizarAtaque(ataque @ Ataque(tipo, _, efecto)) if pokemon.conoceAtaque(ataque) && pokemon.puntosDeAtaque(ataque) > 0 =>
+          val estadoDspDeRealizarAtaque = (estadoActual.map { poke => poke.usarAtaque(ataque) }).
+          map((pokemon) => {
+            tipo match {
+              case Dragon =>
+                pokemon.ganarExperiencia(80)
+              case pokemon.especie.tipoPrincipal =>
+                pokemon.ganarExperiencia(50)
+              case pokemon.especie.tipoSecundario =>
+                pokemon.genero match {
+                  case 'F' =>
+                    pokemon.ganarExperiencia(40)
+                  case 'M' =>
+                    pokemon.ganarExperiencia(20)
               }
-              poke = efecto(poke)
-              poke.usarAtaque(ataque)
-              poke
-            } else {
-              pokemon
             }
-          }
-        )
+          })
+          efecto(estadoDspDeRealizarAtaque)
+        case RealizarAtaque(_) => estadoActual
+      }
+      
+      estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())
     }}
   }
 }

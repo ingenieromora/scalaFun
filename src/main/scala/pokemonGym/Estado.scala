@@ -3,10 +3,45 @@ package pokemonGym
 /**
  * @author seb
  */
-abstract class Estado()
+trait Estado {
+  def pokemon: Pokemon
+  def map(f: (Pokemon => Pokemon)): Estado
+  def filter(f: (Pokemon => Boolean)): Estado
+  def flatMap(f: (Pokemon => Estado )): Estado
+}
 
-case object Envenenado extends Estado
-case object Dormido extends Estado
-case object Paralizado extends Estado
-case object KO extends Estado
-case object OK extends Estado
+case class Envenenado(val pokemon: Pokemon) extends Estado {
+  def map(f: (Pokemon => Pokemon)) = Envenenado(f(pokemon))
+  def filter(f: (Pokemon => Boolean)) = if (f(pokemon)) this else Invalido(pokemon, "Fallo el filtrado")
+  def flatMap(f: (Pokemon => Estado )) = f(pokemon)
+}
+
+case class Dormido(val pokemon: Pokemon, val contador: Int = 3) extends Estado {
+  def map(f: (Pokemon => Pokemon)) = this
+  def filter(f: (Pokemon => Boolean)) = if (f(pokemon)) this else Invalido(pokemon, "Fallo el filtrado")
+  def flatMap(f: (Pokemon => Estado )) = this
+}
+
+case class Paralizado(val pokemon: Pokemon) extends Estado {
+  def map(f: (Pokemon => Pokemon)) = Paralizado(f(pokemon))
+  def filter(f: (Pokemon => Boolean)) = if (f(pokemon)) this else Invalido(pokemon, "Fallo el filtrado")
+  def flatMap(f: (Pokemon => Estado )) = f(pokemon)
+}
+
+case class KO(val pokemon: Pokemon) extends Estado {
+  def map(f: (Pokemon => Pokemon)) = KO(pokemon)
+  def filter(f: (Pokemon => Boolean)) = if (f(pokemon)) this else Invalido(pokemon, "Fallo el filtrado")
+  def flatMap(f: (Pokemon => Estado )) = this
+}
+
+case class OK(val pokemon: Pokemon) extends Estado {
+	def map(f: (Pokemon => Pokemon)) = OK(f(pokemon))
+	def filter(f: (Pokemon => Boolean)) = if (f(pokemon)) this else Invalido(pokemon, "Fallo el filtrado")
+  def flatMap(f: (Pokemon => Estado )) = f(pokemon)
+}
+
+case class Invalido(val pokemon: Pokemon, val descripcion: String) extends Estado {
+  def map(f: (Pokemon => Pokemon)) = Invalido(pokemon, descripcion)
+  def filter(f: (Pokemon => Boolean)) = Invalido(pokemon, descripcion)
+  def flatMap(f: (Pokemon => Estado )) = this
+}
