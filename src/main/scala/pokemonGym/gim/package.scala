@@ -56,6 +56,19 @@ package object gim {
             }
           }
         }
+
+        case UsarPiedra(piedra: String) => {
+          val piedraNecesaria = pokemon.especie.piedraEvolutiva.tostring
+          if ((piedraNecesaria == piedra) ||
+             (piedraNecesaria == "Usar Piedra" && piedra == pokemon.especie.tipoPrincipal.tostring)) {
+            //todo: el pokemon evoluciona por usar una piedra especial o porque es del tipo principal del pokemon
+            //todo: basta mostrar un mensaje o hay que crear un nuevo objeto evolucion  ?
+          } else {
+            if(!pokemon.especie.tipoPrincipal.gana_tipo(piedra) || !pokemon.especie.tipoSecundario.gana_tipo(piedra))
+            //todo: el tipo de la piedra le gana al tipo de la especie
+            //todo: cambiar estado del pokemon a envenenado
+          }
+        }
       }
       
       estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())
