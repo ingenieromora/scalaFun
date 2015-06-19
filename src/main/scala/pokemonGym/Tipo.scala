@@ -22,7 +22,7 @@ case Volador => debilesAnteVolador.contains(tipoX)
 case Bicho => debilesAnteBicho.contains(tipoX)
 case Veneno => debilesAnteVeneno.contains(tipoX)
 case Dragon => debilesAnteDragon.contains(tipoX)
-case Normal => true
+case Normal => false
 }
 
 case object Fuego extends Tipo
