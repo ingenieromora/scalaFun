@@ -5,8 +5,8 @@ package pokemonGym
  */
 package object gim {
   
-  def ejecutar(pokemon: Pokemon, listaDeActividades: Actividad*): Estado = {
-    listaDeActividades.foldLeft(OK(pokemon) : Estado) { (resultadoAnterior, actividadActual) => {
+  def ejecutar(pokemon: Pokemon, estadoInicial : Estado, listaDeActividades: Actividad*): Estado = {
+    listaDeActividades.foldLeft(estadoInicial) { (resultadoAnterior, actividadActual) => {
 
       val estadoActual =  resultadoAnterior match {
         case a @ OK(pok) => OK(pok)
