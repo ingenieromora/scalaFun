@@ -83,4 +83,8 @@ case class Pokemon(
   def comerCalcio() : Pokemon = {
     copy (velocidad = velocidad + 5)
   }
+
+  def comerZinc() : Pokemon = {
+    copy( ataques = ataques.map { case (ataque: Ataque, puntos: Int) => (ataque, puntos+2)})
+  }
 }

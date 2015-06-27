@@ -60,8 +60,13 @@ package object gim {
         case UsarPocion() => {
           estadoActual.map(pokemon => pokemon.usarPocion())
         }
+
         case ComerCalcio() => {
           estadoActual.map(pokemon => pokemon.comerCalcio())
+        }
+
+        case ComerZinc() => {
+          estadoActual.map(pokemon => pokemon.comerZinc())
         }
       }
       
