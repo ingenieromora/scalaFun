@@ -79,4 +79,8 @@ case class Pokemon(
       copy(energia = energia + MAXIMA_ENERGIA_RECOBRADA)
     }
   }
+
+  def comerCalcio() : Pokemon = {
+    copy (velocidad = velocidad + 5)
+  }
 }

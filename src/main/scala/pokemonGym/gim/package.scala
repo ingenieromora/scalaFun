@@ -60,6 +60,9 @@ package object gim {
         case UsarPocion() => {
           estadoActual.map(pokemon => pokemon.usarPocion())
         }
+        case ComerCalcio() => {
+          estadoActual.map(pokemon => pokemon.comerCalcio())
+        }
       }
       
       estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())
