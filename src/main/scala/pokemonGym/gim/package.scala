@@ -76,6 +76,14 @@ package object gim {
             case estado @ _ => estado
           }
         }
+
+        case UsarEther() => {
+          estadoActual match {
+            case estado @ KO(_) => estado
+            case estado => estado.flatMap(poke => OK(poke))
+          }
+        }
+
       }
       
       estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())

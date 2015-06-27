@@ -11,3 +11,4 @@ case class UsarPocion() extends Actividad
 case class ComerCalcio() extends Actividad
 case class ComerZinc() extends Actividad
 case class UsarAntidoto() extends Actividad
+case class UsarEther() extends Actividad
