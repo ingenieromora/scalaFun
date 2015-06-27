@@ -18,6 +18,8 @@ case class Pokemon(
   require(validarAtaques(), "Los ataques no son ni del tipo principal $especie.tipoPrincipal" +
                             " ni del tipo secundario $especie.tipoSecundario" )
 
+  val MAXIMA_ENERGIA_RECOBRADA = 50
+
   def ganarExperiencia(exp: Int) : Pokemon = {
     val expParaSubirNivel = 2 * (nivel - 1) * especie.resistenciaEvolutiva + especie.resistenciaEvolutiva
     val expRestante = expParaSubirNivel - experiencia
@@ -69,5 +71,12 @@ case class Pokemon(
   }
   
   def aumentarEnergiaAlMaximo() : Pokemon = copy(energia = energiaMaxima)
-  
+
+  def usarPocion() : Pokemon = {
+    if(energiaMaxima - energia < MAXIMA_ENERGIA_RECOBRADA){
+      copy(energia = energiaMaxima)
+    }else{
+      copy(energia = energia + MAXIMA_ENERGIA_RECOBRADA)
+    }
+  }
 }

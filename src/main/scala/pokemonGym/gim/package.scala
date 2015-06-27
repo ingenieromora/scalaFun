@@ -56,6 +56,10 @@ package object gim {
             }
           }
         }
+
+        case UsarPocion() => {
+          estadoActual.map(pokemon => pokemon.usarPocion())
+        }
       }
       
       estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())
