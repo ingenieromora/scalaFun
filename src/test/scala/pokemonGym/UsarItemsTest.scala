@@ -20,10 +20,14 @@ class UsarItemsTest extends FlatSpec with Matchers {
   }
 
   "Un pokemon" should "envenado, toma antidoto y se cura" in {
-
+    val charizard = Pokemon(90, 150, 30, 35, 25, 'F', Especie.Charizard(), List((FuriaDragon, 4)), 55)
+    val estadoDespuesDeActividad = gim.ejecutar(charizard,Envenenado(charizard) , UsarAntidoto())
+    estadoDespuesDeActividad should be (OK(charizard))
   }
 
   "Un pokemon" should "ok, toma antidoto y no pasa nada" in {
-
+    val charizard = Pokemon(90, 150, 30, 35, 25, 'F', Especie.Charizard(), List((FuriaDragon, 4)), 55)
+    val estadoDespuesDeActividad = gim.ejecutar(charizard,KO(charizard) , UsarAntidoto())
+    estadoDespuesDeActividad should be (KO(charizard))
   }
 }

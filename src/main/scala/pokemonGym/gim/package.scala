@@ -14,6 +14,7 @@ package object gim {
         case a @ Paralizado(pok) => Paralizado(pok)
         case a @ Dormido(pok, 0) => OK(pok)
         case a @ Dormido(pok, cont) => Dormido(pok, cont - 1)
+        case a @ Envenenado(pok) => Envenenado(pok)
       }
       
       val estadoDespuesDeActividad = actividadActual match {
@@ -67,6 +68,13 @@ package object gim {
 
         case ComerZinc() => {
           estadoActual.map(pokemon => pokemon.comerZinc())
+        }
+
+        case UsarAntidoto() => {
+          estadoActual match {
+            case estado @ Envenenado(_) => estado.flatMap(poke => OK(poke))
+            case estado @ _ => estado
+          }
         }
       }
       

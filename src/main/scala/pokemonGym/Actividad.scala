@@ -10,3 +10,4 @@ case class LevantarPesas(kilos: Int) extends Actividad
 case class UsarPocion() extends Actividad
 case class ComerCalcio() extends Actividad
 case class ComerZinc() extends Actividad
+case class UsarAntidoto() extends Actividad
