@@ -84,6 +84,17 @@ package object gim {
           }
         }
 
+        case Descansar() => {
+          estadoActual match {
+            case estado @ OK(_) =>
+              if( estado.pokemon.energia < estado.pokemon.energiaMaxima / 2){
+                estado.flatMap(poke => Dormido(poke.recobrarPuntosAtaque()))
+              }else{
+                estado.map(poke => poke.recobrarPuntosAtaque())
+              }
+            case estado => estado.map(poke => poke.recobrarPuntosAtaque())
+          }
+        }
       }
       
       estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())
