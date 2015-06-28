@@ -5,8 +5,8 @@ package pokemonGym
  */
 package object gim {
   
-  def ejecutar(pokemon: Pokemon, listaDeActividades: Actividad*): Estado = {
-    listaDeActividades.foldLeft(OK(pokemon) : Estado) { (resultadoAnterior, actividadActual) => {
+  def ejecutar(pokemon: Pokemon, estadoInicial : Estado, listaDeActividades: Actividad*): Estado = {
+    listaDeActividades.foldLeft(estadoInicial) { (resultadoAnterior, actividadActual) => {
 
       val estadoActual =  resultadoAnterior match {
         case a @ OK(pok) => OK(pok)
@@ -14,6 +14,7 @@ package object gim {
         case a @ Paralizado(pok) => Paralizado(pok)
         case a @ Dormido(pok, 0) => OK(pok)
         case a @ Dormido(pok, cont) => Dormido(pok, cont - 1)
+        case a @ Envenenado(pok) => Envenenado(pok)
       }
       
       val estadoDespuesDeActividad = actividadActual match {
@@ -58,15 +59,53 @@ package object gim {
         }
 
         case UsarPiedra(piedra: String) => {
-          val piedraNecesaria = pokemon.especie.piedraEvolutiva.tostring
+          val piedraNecesaria = pokemon.especie.piedraEvolutiva
           if ((piedraNecesaria == piedra) ||
-             (piedraNecesaria == "Usar Piedra" && piedra == pokemon.especie.tipoPrincipal.tostring)) {
-            //todo: el pokemon evoluciona por usar una piedra especial o porque es del tipo principal del pokemon
-            //todo: basta mostrar un mensaje o hay que crear un nuevo objeto evolucion  ?
-          } else {
-            if(!pokemon.especie.tipoPrincipal.gana_tipo(piedra) || !pokemon.especie.tipoSecundario.gana_tipo(piedra))
-            //todo: el tipo de la piedra le gana al tipo de la especie
-            //todo: cambiar estado del pokemon a envenenado
+               (piedraNecesaria == "Usar Piedra" && piedra == pokemon.especie.tipoPrincipal.tostring)) {
+              puts ("Felicidades tu " + pokemon.especie.toString + " ha evolucionado a " + pokemon.especie.evolucion)
+          } else if(!pokemon.especie.tipoPrincipal.gana_tipo(piedra) || !pokemon.especie.tipoSecundario.gana_tipo(piedra)){
+                puts ("Tu pokemon pasa a estar envenenado")
+          }
+          else{
+            puts ("Nada ha ocurrido")
+          }
+        }
+
+        case UsarPocion() => {
+          estadoActual.map(pokemon => pokemon.usarPocion())
+        }
+
+        case ComerCalcio() => {
+          estadoActual.map(pokemon => pokemon.comerCalcio())
+        }
+
+        case ComerZinc() => {
+          estadoActual.map(pokemon => pokemon.comerZinc())
+        }
+
+        case UsarAntidoto() => {
+          estadoActual match {
+            case estado @ Envenenado(_) => estado.flatMap(poke => OK(poke))
+            case estado @ _ => estado
+          }
+        }
+
+        case UsarEther() => {
+          estadoActual match {
+            case estado @ KO(_) => estado
+            case estado => estado.flatMap(poke => OK(poke))
+          }
+        }
+
+        case Descansar() => {
+          estadoActual match {
+            case estado @ OK(_) =>
+              if( estado.pokemon.energia < estado.pokemon.energiaMaxima / 2){
+                estado.flatMap(poke => Dormido(poke.recobrarPuntosAtaque()))
+              }else{
+                estado.map(poke => poke.recobrarPuntosAtaque())
+              }
+            case estado => estado.map(poke => poke.recobrarPuntosAtaque())
           }
         }
       }
