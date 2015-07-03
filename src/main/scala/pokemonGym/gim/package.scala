@@ -5,7 +5,7 @@ package pokemonGym
  */
 package object gim {
   
-  def ejecutar(pokemon: Pokemon, estadoInicial : Estado, listaDeActividades: Actividad*): Estado = {
+  def ejecutar(estadoInicial : Estado, listaDeActividades: Actividad*): Estado = {
     listaDeActividades.foldLeft(estadoInicial) { (resultadoAnterior, actividadActual) => {
 
       val estadoActual =  resultadoAnterior match {
@@ -17,8 +17,8 @@ package object gim {
         case a @ Envenenado(pok) => Envenenado(pok)
       }
       
-      val estadoDespuesDeActividad = actividadActual match {
-        case RealizarAtaque(ataque @ Ataque(tipo, _, efecto)) if pokemon.conoceAtaque(ataque) && pokemon.puntosDeAtaque(ataque) > 0 =>
+      val estadoDespuesDeActividad: Estado = actividadActual match {
+        case RealizarAtaque(ataque @ Ataque(tipo, _, efecto)) if estadoActual.pokemon.conoceAtaque(ataque) && estadoActual.pokemon.puntosDeAtaque(ataque) > 0 =>
           val estadoDspDeRealizarAtaque = estadoActual
             .map( poke => poke.usarAtaque(ataque) )
             .map(pokemon => {
