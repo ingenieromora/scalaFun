@@ -91,4 +91,17 @@ case class Pokemon(
   def recobrarPuntosAtaque() : Pokemon = {
     copy( ataques = ataques.map { case (ataque: Ataque, puntos: Int) => (ataque, ataque.maximoPuntosAtaque)})
   }
+
+  def usarPiedra(tipoPiedra: Tipo): Pokemon ={
+    val nuevaEspecie : Especie = especie.condicionEvolutiva match {
+      case UsarPiedraLunar() => if (tipoPiedra.equals(Lunar)) especie.evolucion else especie
+      case UsarPiedra() => if (tipoPiedra.equals(especie.tipoPrincipal)) especie.evolucion else especie
+      case _ => especie
+    }
+    copy(especie = nuevaEspecie)
+  }
+
+  def evolucionar() : Pokemon = {
+    copy (especie = especie.evolucion)
+  }
 }

@@ -10,3 +10,4 @@ object Enfocarse extends Ataque(Normal, 25, (estado: Estado) => estado.map((poke
 object Reposar extends Ataque(Normal, 20, (estado: Estado) => estado.flatMap((poke) => Dormido(poke.aumentarEnergiaAlMaximo())))
 object FuriaDragon extends Ataque(Dragon, 10)
 object Ascuas extends Ataque(Fuego, 25)
+object Impactrueno extends Ataque(Electrico, 25)

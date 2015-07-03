@@ -13,3 +13,4 @@ case class ComerZinc() extends Actividad
 case class UsarAntidoto() extends Actividad
 case class UsarEther() extends Actividad
 case class Descansar() extends Actividad
+case class UsarPiedraParaEvolucionar(tipo: Tipo) extends Actividad

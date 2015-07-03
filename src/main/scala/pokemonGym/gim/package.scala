@@ -48,8 +48,8 @@ package object gim {
                 estado.flatMap( poke => Paralizado(poke))
               } else {
                 val experienciaGanada = estado.pokemon.especie match {
-                  case Especie(_,_,Pelea,_,_,_,_,_) | Especie(_,_,_,Pelea,_,_,_,_) => 2 * kilos
-                  case Especie(_,_,Fantasma,_,_,_,_,_) | Especie(_,_,_,Fantasma,_,_,_,_) => 0
+                  case Especie(_,_,Pelea,_,_,_,_,_,_,_) | Especie(_,_,_,Pelea,_,_,_,_,_,_) => 2 * kilos
+                  case Especie(_,_,Fantasma,_,_,_,_,_,_,_) | Especie(_,_,_,Fantasma,_,_,_,_,_,_) => 0
                   case _ => kilos
                 }
                 estado.map( poke => poke.ganarExperiencia(experienciaGanada))
@@ -95,8 +95,19 @@ package object gim {
             case estado => estado.map(poke => poke.recobrarPuntosAtaque())
           }
         }
+
+        case UsarPiedraParaEvolucionar(tipoPiedra: Tipo) =>
+          val nuevoEstado: Estado = estadoActual.map(poke => poke.usarPiedra(tipoPiedra))
+          nuevoEstado
+            .flatMap(poke => {
+                if(tipoPiedra.leGanaA(poke.especie.tipoPrincipal) ||
+                    tipoPiedra.leGanaA(poke.especie.tipoSecundario))
+                  Envenenado(poke)
+                else nuevoEstado
+            }
+          )
       }
-      
+
       estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())
     }}
   }
