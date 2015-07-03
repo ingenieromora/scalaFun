@@ -104,4 +104,13 @@ case class Pokemon(
   def evolucionar() : Pokemon = {
     copy (especie = especie.evolucion)
   }
+
+  def sonIntercambiados() : Pokemon = {
+    val nuevoPoke = especie.condicionEvolutiva match {
+      case Intercambiar() => copy(especie= especie.evolucion)
+      case _ => if(genero.equals('M')) copy(peso = peso + 1) else copy(peso = peso - 10)
+    }
+
+    return nuevoPoke;
+  }
 }

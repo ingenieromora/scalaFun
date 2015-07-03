@@ -106,6 +106,9 @@ package object gim {
                 else nuevoEstado
             }
           )
+
+        case FingirIntercambio() => estadoActual.map(poke => poke.sonIntercambiados())
+
       }
 
       estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())
