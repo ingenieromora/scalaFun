@@ -11,3 +11,4 @@ object Reposar extends Ataque(Normal, 20, (estado: Estado) => estado.flatMap((po
 object FuriaDragon extends Ataque(Dragon, 10)
 object Ascuas extends Ataque(Fuego, 25)
 object Impactrueno extends Ataque(Electrico, 25)
+object Rain_Dish extends Ataque(Agua, 100)

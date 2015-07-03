@@ -15,3 +15,4 @@ case class UsarEther() extends Actividad
 case class Descansar() extends Actividad
 case class UsarPiedraParaEvolucionar(tipo: Tipo) extends Actividad
 case class FingirIntercambio() extends Actividad
+case class Nadar(tiempo: Int) extends Actividad

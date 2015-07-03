@@ -47,4 +47,7 @@ object Especie {
   def Wigglytuff() = {
     Especie(390, 1, Normal, null, 45, 45, 50, 60, NoEvoluciona(), null)
   }
+  def Blastoise() = {
+    Especie(390, 1, Agua, null, 45, 45, 50, 60, NoEvoluciona(), null)
+  }
 }

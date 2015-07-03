@@ -58,6 +58,12 @@ package object gim {
           }
         }
 
+        case Nadar(tiempo: Int) => {
+          if(Agua.leGanaA(estadoActual.pokemon.especie.tipoPrincipal))
+            estadoActual.flatMap(pokemon => KO(pokemon))
+          else
+            estadoActual.map(poke => poke.nadar(tiempo))
+        }
         case UsarPocion() => {
           estadoActual.map(pokemon => pokemon.usarPocion())
         }

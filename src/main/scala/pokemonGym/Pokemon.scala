@@ -111,6 +111,16 @@ case class Pokemon(
       case _ => if(genero.equals('M')) copy(peso = peso + 1) else copy(peso = peso - 10)
     }
 
-    return nuevoPoke;
+    nuevoPoke
+  }
+
+  def nadar(minutos: Int) : Pokemon = {
+    val experienciaGanada = minutos * 200
+    val energiaPerdida = minutos
+    val nuevoPoke = especie.tipoPrincipal match{
+      case Agua => copy(experiencia = experiencia + experienciaGanada, energia = energia - energiaPerdida, velocidad = velocidad + 60 / minutos )
+      case _ => copy(experiencia = experiencia + experienciaGanada, energia = energia - energiaPerdida)
+    }
+    nuevoPoke
   }
 }
