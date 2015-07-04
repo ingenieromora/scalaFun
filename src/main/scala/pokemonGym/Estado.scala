@@ -29,9 +29,9 @@ case class Paralizado(val pokemon: Pokemon) extends Estado {
 }
 
 case class KO(val pokemon: Pokemon) extends Estado {
-  def map(f: (Pokemon => Pokemon)) = KO(pokemon)
+  def map(f: (Pokemon => Pokemon)) = Invalido(pokemon, "El pokemon en estado KO no puede realizar actividades")
   def filter(f: (Pokemon => Boolean)) = if (f(pokemon)) this else Invalido(pokemon, "Fallo el filtrado")
-  def flatMap(f: (Pokemon => Estado )) = this
+  def flatMap(f: (Pokemon => Estado )) = Invalido(pokemon, "El pokemon en estado KO no puede realizar actividades")
 }
 
 case class OK(val pokemon: Pokemon) extends Estado {

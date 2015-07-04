@@ -5,65 +5,84 @@ package pokemonGym
  */
 package object gim {
   
+  def dameLaMejorRutina(estadoInicial: Estado, 
+                        funcionCriterio: (Estado => Int),
+                        listaDeRutinas: Rutina*) : String = {
+    val listaDeEstadosDeRutinas = listaDeRutinas.map {
+      rutina => ejecutar(estadoInicial, rutina)
+    }
+    val listaDeEstadosOrdenadosSegunCriterio = listaDeEstadosDeRutinas.filter {
+      estado => estado match {
+        case Invalido(_,_) => false
+        case _ => true
+      }
+    }.sortBy(funcionCriterio)
+    if (listaDeEstadosOrdenadosSegunCriterio.isEmpty) {
+      null
+    } else {
+      val mejorEstado = listaDeEstadosOrdenadosSegunCriterio.last
+      val indiceDelMejorEstado = listaDeEstadosDeRutinas.indexOf(mejorEstado)
+      listaDeRutinas(indiceDelMejorEstado).nombre
+    }
+  }
+  
+  def ejecutar(estadoInicial : Estado, rutina: Rutina): Estado = {
+    ejecutar(estadoInicial, rutina.actividades.toSeq : _ *)
+  }
+  
   def ejecutar(estadoInicial : Estado, listaDeActividades: Actividad*): Estado = {
     listaDeActividades.foldLeft(estadoInicial) { (resultadoAnterior, actividadActual) => {
 
       val estadoActual =  resultadoAnterior match {
-        case a @ OK(pok) => OK(pok)
-        case a @ KO(pok) => KO(pok)
-        case a @ Paralizado(pok) => Paralizado(pok)
         case a @ Dormido(pok, 0) => OK(pok)
         case a @ Dormido(pok, cont) => Dormido(pok, cont - 1)
-        case a @ Envenenado(pok) => Envenenado(pok)
+        case _ => resultadoAnterior
       }
       
       val estadoDespuesDeActividad: Estado = actividadActual match {
         case RealizarAtaque(ataque @ Ataque(tipo, _, efecto)) if estadoActual.pokemon.conoceAtaque(ataque) && estadoActual.pokemon.puntosDeAtaque(ataque) > 0 =>
-          val estadoDspDeRealizarAtaque = estadoActual
-            .map( poke => poke.usarAtaque(ataque) )
-            .map(pokemon => {
-              tipo match {
-                case Dragon =>
-                  pokemon.ganarExperiencia(80)
-                case pokemon.especie.tipoPrincipal =>
-                  pokemon.ganarExperiencia(50)
+          val estadoDspDeRealizarAtaque = estadoActual.map(pokemon => {
+              val expGanada = tipo match {
+                case Dragon => 80
+                case pokemon.especie.tipoPrincipal => 50
                 case pokemon.especie.tipoSecundario =>
                   pokemon.genero match {
-                    case 'F' =>
-                      pokemon.ganarExperiencia(40)
-                    case 'M' =>
-                      pokemon.ganarExperiencia(20)
+                    case 'F' => 40
+                    case 'M' => 20
                 }
               }
+              pokemon.usarAtaque(ataque).ganarExperiencia(expGanada)
             })
           efecto(estadoDspDeRealizarAtaque)
           
-        case RealizarAtaque(_) => estadoActual
+        case RealizarAtaque(ataque) => estadoActual.flatMap(poke => Invalido(poke,
+            "El pokemon quiso ejecutar el ataque " + ataque.toString() + " que es desconocido o no tiene puntos de ataque"))
         
         case LevantarPesas(kilos) => {
-          estadoActual match {
-            case estado @ Paralizado(_) => estado.flatMap( poke => KO(poke) )
-            case estado @ _ => {
-              if (kilos > 10 * estado.pokemon.fuerza) {
-                estado.flatMap( poke => Paralizado(poke))
-              } else {
-                val experienciaGanada = estado.pokemon.especie match {
-                  case Especie(_,_,Pelea,_,_,_,_,_,_,_) | Especie(_,_,_,Pelea,_,_,_,_,_,_) => 2 * kilos
-                  case Especie(_,_,Fantasma,_,_,_,_,_,_,_) | Especie(_,_,_,Fantasma,_,_,_,_,_,_) => 0
-                  case _ => kilos
+          if (estadoActual.pokemon.esDelTipo(Fantasma)) {
+            estadoActual.flatMap( poke => Invalido(poke, "Los pokemons del tipo fantasma"))
+          } else {
+            estadoActual match {
+              case estado @ Paralizado(_) => KO(estado.pokemon)
+              case estado @ _ => {
+                if (kilos > 10 * estado.pokemon.fuerza) {
+                  estado.flatMap( poke => Paralizado(poke))
+                } else {
+                  val experienciaGanada = if (estado.pokemon.esDelTipo(Pelea)) 2 * kilos else kilos
+                  estado.map( poke => poke.ganarExperiencia(experienciaGanada))
                 }
-                estado.map( poke => poke.ganarExperiencia(experienciaGanada))
               }
             }
           }
         }
 
         case Nadar(tiempo: Int) => {
-          if(Agua.leGanaA(estadoActual.pokemon.especie.tipoPrincipal))
+          if (Agua.leGanaA(estadoActual.pokemon.especie.tipoPrincipal))
             estadoActual.flatMap(pokemon => KO(pokemon))
           else
             estadoActual.map(poke => poke.nadar(tiempo))
         }
+
         case UsarPocion() => {
           estadoActual.map(pokemon => pokemon.usarPocion())
         }
@@ -95,7 +114,7 @@ package object gim {
             case estado @ OK(_) =>
               if( estado.pokemon.energia < estado.pokemon.energiaMaxima / 2){
                 estado.flatMap(poke => Dormido(poke.recobrarPuntosAtaque()))
-              }else{
+              } else {
                 estado.map(poke => poke.recobrarPuntosAtaque())
               }
             case estado => estado.map(poke => poke.recobrarPuntosAtaque())
@@ -103,21 +122,29 @@ package object gim {
         }
 
         case UsarPiedraParaEvolucionar(tipoPiedra: Tipo) =>
-          val nuevoEstado: Estado = estadoActual.map(poke => poke.usarPiedra(tipoPiedra))
-          nuevoEstado
-            .flatMap(poke => {
-                if(tipoPiedra.leGanaA(poke.especie.tipoPrincipal) ||
-                    tipoPiedra.leGanaA(poke.especie.tipoSecundario))
-                  Envenenado(poke)
-                else nuevoEstado
+            estadoActual.flatMap(poke => {
+              if(tipoPiedra.leGanaA(poke.especie.tipoPrincipal) ||
+                  tipoPiedra.leGanaA(poke.especie.tipoSecundario)){
+                Envenenado(poke)
+              } else {
+                estadoActual.map(poke => poke.usarPiedra(tipoPiedra))
+              }
             }
           )
 
-        case FingirIntercambio() => estadoActual.map(poke => poke.sonIntercambiados())
-
+        case FingirIntercambio() => estadoActual.map(poke => {
+          poke.especie.condicionEvolutiva match {
+            case Intercambiar() => poke.copy(especie= poke.especie.evolucion)
+            case _ => if(poke.genero.equals('M')) poke.copy(peso = poke.peso + 1) else poke.copy(peso = poke.peso - 10)
+          }
+        })
       }
 
-      estadoDespuesDeActividad.filter((pokemon) => pokemon.valido())
+      if (estadoDespuesDeActividad.pokemon.valido()) {
+        estadoDespuesDeActividad
+      } else {
+        Invalido(estadoDespuesDeActividad.pokemon, "Las caracteristicas del pokemon son invalidas")
+      }
     }}
   }
 }

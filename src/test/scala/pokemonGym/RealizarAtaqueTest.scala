@@ -15,6 +15,24 @@ class RealizarAtaqueTest extends FlatSpec with Matchers {
     charizarDespuesDeActividad.experiencia should be (experienciaAntes + 80)
   }
   
+  "Un pokemon" should "quedar invalido si realiza ataque que no conoce" in {
+    val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Especie.Charizard(), Nil, 55)
+    val charizarDespuesDeActividad = gim.ejecutar(OK(charizard) , RealizarAtaque(FuriaDragon))
+    charizarDespuesDeActividad match {
+      case Invalido(_,_) =>
+      case _ => fail("el estado deberia ser invalido")
+    }
+  }
+  
+  "Un pokemon" should "quedar invalido si realiza ataque que tiene 0 puntos" in {
+    val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Especie.Charizard(), List((FuriaDragon, 0)), 55)
+    val charizarDespuesDeActividad = gim.ejecutar(OK(charizard) , RealizarAtaque(FuriaDragon))
+    charizarDespuesDeActividad match {
+      case Invalido(_,_) =>
+      case _ => fail("el estado deberia ser invalido")
+    }
+  }
+  
   "Un pokemon" should "subir exp cuando realiza ataque de su tipo principal" in {
 	  val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Especie.Charizard(), List((Ascuas, 4)), 55)
 	  val experienciaAntes = charizard.experiencia

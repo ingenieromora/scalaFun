@@ -22,11 +22,14 @@ class LevantarPesasTest extends FlatSpec with Matchers {
     monkeyDespuesDeActividad.experiencia should be (experienciaAntes + 20)
   }
   
-  "Un pokemon" should "no sumar exp cuando levanta test y es tipo fantasma" in {
+  "Un pokemon" should "quedar en estado invalido si es fantasma" in {
 	  val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Especie.Gengar(), Nil, 60)
 	  val experienciaAntes = gengar.experiencia
-	  val gengarDespuesDeActividad = gim.ejecutar(OK(gengar), LevantarPesas(10)).pokemon
-	  gengarDespuesDeActividad.experiencia should be (experienciaAntes)
+	  val gengarDespuesDeActividad = gim.ejecutar(OK(gengar), LevantarPesas(10))
+	  gengarDespuesDeActividad match {
+      case Invalido(_, _) => 
+      case _ => fail("El estado deberia ser invalido")
+    }
   }
   
   "Un pokemon" should "paralizarse sin sumar exp cuando levanta mas de 10 kilos por cada unidad de fuerza" in {

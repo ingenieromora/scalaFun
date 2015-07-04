@@ -51,8 +51,14 @@ case class Pokemon(
   }
   
   def valido(): Boolean = {
-    
-    true
+    var valido : Boolean = true
+    valido &= fuerza > 0
+    valido &= energia >= 0
+    valido &= velocidad > 0
+    valido &= nivel > 0
+    valido &= experiencia >= 0
+    valido &= peso > 0
+    valido
   }
   
   def subirDeNivel() = {
@@ -105,15 +111,6 @@ case class Pokemon(
     copy (especie = especie.evolucion)
   }
 
-  def sonIntercambiados() : Pokemon = {
-    val nuevoPoke = especie.condicionEvolutiva match {
-      case Intercambiar() => copy(especie= especie.evolucion)
-      case _ => if(genero.equals('M')) copy(peso = peso + 1) else copy(peso = peso - 10)
-    }
-
-    nuevoPoke
-  }
-
   def nadar(minutos: Int) : Pokemon = {
     val experienciaGanada = minutos * 200
     val energiaPerdida = minutos
@@ -122,5 +119,13 @@ case class Pokemon(
       case _ => copy(experiencia = experiencia + experienciaGanada, energia = energia - energiaPerdida)
     }
     nuevoPoke
+  }
+  
+  def esDelTipo(tipo: Tipo) : Boolean = {
+    especie match {
+      case esp @ Especie(_,_,`tipo`,_,_,_,_,_,_,_) => true
+      case esp @ Especie(_,_,_,`tipo`,_,_,_,_,_,_) => true
+      case _ => false
+    }
   }
 }
