@@ -10,13 +10,14 @@ trait Estado {
   def flatMap(f: (Pokemon => Estado )): Estado
 }
 
-case class Envenenado(val pokemon: Pokemon) extends Estado {
+case class Envenenado(pokemon: Pokemon) extends Estado {
   def map(f: (Pokemon => Pokemon)) = Envenenado(f(pokemon))
   def filter(f: (Pokemon => Boolean)) = if (f(pokemon)) this else Invalido(pokemon, "Fallo el filtrado")
   def flatMap(f: (Pokemon => Estado )) = f(pokemon)
 }
 
-case class Dormido(val pokemon: Pokemon, val contador: Int = 3) extends Estado {
+case class Dormido(pokemon: Pokemon, contador: Int = 3) extends Estado {
+  // TODO evaluar si no es mejor que éste map retorne un Dormido - 1 en vez de tener la lógica afuera
   def map(f: (Pokemon => Pokemon)) = this
   def filter(f: (Pokemon => Boolean)) = if (f(pokemon)) this else Invalido(pokemon, "Fallo el filtrado")
   def flatMap(f: (Pokemon => Estado )) = this
@@ -41,6 +42,7 @@ case class OK(val pokemon: Pokemon) extends Estado {
 }
 
 case class Invalido(val pokemon: Pokemon, val descripcion: String) extends Estado {
+  // TODO detalle: no tiene caso crear otro Invalido con los mismo datos, es lo mismo que retornar this
   def map(f: (Pokemon => Pokemon)) = Invalido(pokemon, descripcion)
   def filter(f: (Pokemon => Boolean)) = Invalido(pokemon, descripcion)
   def flatMap(f: (Pokemon => Estado )) = this

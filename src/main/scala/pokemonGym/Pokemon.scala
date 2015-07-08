@@ -4,16 +4,18 @@ package pokemonGym
  * Created by leandromoras on 6/8/15.
  */
 case class Pokemon(
-		val energia: Int,
-		val energiaMaxima: Int,
-		val peso: Int,
-		val fuerza: Int,
-		val velocidad: Int,
-    val genero: Char,
-    val especie: Especie,
-    val ataques: List[(Ataque, Int)],
-    val nivel: Int = 1,
-    val experiencia: Int = 0) {
+		energia: Int,
+		energiaMaxima: Int,
+		peso: Int,
+		fuerza: Int,
+		velocidad: Int,
+    genero: Char,
+    especie: Especie,
+    // TODO es más facil usar un mapa (que de hecho también es una función "key => valor") 
+    ataques: List[(Ataque, Int)],
+    // TODO el nivel está en función de la experiencia y la especie (debería ser calculado)
+    nivel: Int = 1,
+    experiencia: Int = 0) {
   
   require(validarAtaques(), "Los ataques no son ni del tipo principal $especie.tipoPrincipal" +
                             " ni del tipo secundario $especie.tipoSecundario" )
@@ -123,8 +125,8 @@ case class Pokemon(
   
   def esDelTipo(tipo: Tipo) : Boolean = {
     especie match {
-      case esp @ Especie(_,_,`tipo`,_,_,_,_,_,_,_) => true
-      case esp @ Especie(_,_,_,`tipo`,_,_,_,_,_,_) => true
+      case Especie(_,_,`tipo`,_,_,_,_,_,_,_) => true
+      case Especie(_,_,_,`tipo`,_,_,_,_,_,_) => true
       case _ => false
     }
   }

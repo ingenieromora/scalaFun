@@ -5,7 +5,9 @@ package pokemonGym
  */
 package object gim {
   
-  def dameLaMejorRutina(estadoInicial: Estado, 
+  // TODO esto debería retornar un Option[String] (no siempre tengo una mejor rutina)
+  def dameLaMejorRutina(estadoInicial: Estado,
+      // TODO el criterio podría ser un Ordering[Estado]
                         funcionCriterio: (Estado => Int),
                         listaDeRutinas: Rutina*) : String = {
     val listaDeEstadosDeRutinas = listaDeRutinas.map {
@@ -16,8 +18,13 @@ package object gim {
         case Invalido(_,_) => false
         case _ => true
       }
+      // TODO de hecho esto está usando el implicit Ordering[Int] (casi lo mismo pero pueden definir el orden directamente
     }.sortBy(funcionCriterio)
     if (listaDeEstadosOrdenadosSegunCriterio.isEmpty) {
+      /*
+       * TODO Cuidado!: no usar null, si algo puede tener un resultado o no usen Option o si algo puede terminar
+       * en error usen Try
+       */
       null
     } else {
       val mejorEstado = listaDeEstadosOrdenadosSegunCriterio.last
@@ -30,12 +37,15 @@ package object gim {
     ejecutar(estadoInicial, rutina.actividades.toSeq : _ *)
   }
   
+  // TODO este método tiene mucho comportamiento:
+  // - hacer que las actividades sean funciones Estado => Estado y cambiar ese match gigante por un "apply"
+  // - Dormido podría cambiar de estado en el map y no acá
   def ejecutar(estadoInicial : Estado, listaDeActividades: Actividad*): Estado = {
     listaDeActividades.foldLeft(estadoInicial) { (resultadoAnterior, actividadActual) => {
 
       val estadoActual =  resultadoAnterior match {
-        case a @ Dormido(pok, 0) => OK(pok)
-        case a @ Dormido(pok, cont) => Dormido(pok, cont - 1)
+        case Dormido(pok, 0) => OK(pok)
+        case Dormido(pok, cont) => Dormido(pok, cont - 1)
         case _ => resultadoAnterior
       }
       
@@ -51,6 +61,8 @@ package object gim {
                     case 'M' => 20
                 }
               }
+              // TODO no sería más cómodo usar un Try y dejar que usarAtaque rompa si no puede usarlo?
+              // (esto implicaría que tienen que cambiar el estado Invalido o sacarlo... evalúen que les parece mejor)
               pokemon.usarAtaque(ataque).ganarExperiencia(expGanada)
             })
           efecto(estadoDspDeRealizarAtaque)
@@ -77,15 +89,15 @@ package object gim {
         }
 
         case Nadar(tiempo: Int) => {
+          // TODO falta el tipo secundario
           if (Agua.leGanaA(estadoActual.pokemon.especie.tipoPrincipal))
             estadoActual.flatMap(pokemon => KO(pokemon))
           else
             estadoActual.map(poke => poke.nadar(tiempo))
         }
 
-        case UsarPocion() => {
-          estadoActual.map(pokemon => pokemon.usarPocion())
-        }
+        // TODO detalle: es más facil usar "_" para este tipo de funciones
+        case UsarPocion() => estadoActual.map(_.usarPocion())
 
         case ComerCalcio() => {
           estadoActual.map(pokemon => pokemon.comerCalcio())
@@ -135,6 +147,7 @@ package object gim {
         case FingirIntercambio() => estadoActual.map(poke => {
           poke.especie.condicionEvolutiva match {
             case Intercambiar() => poke.copy(especie= poke.especie.evolucion)
+            // TODO donde valida el peso máximo?
             case _ => if(poke.genero.equals('M')) poke.copy(peso = poke.peso + 1) else poke.copy(peso = poke.peso - 10)
           }
         })

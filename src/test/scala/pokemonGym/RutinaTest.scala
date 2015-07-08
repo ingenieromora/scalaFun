@@ -74,6 +74,7 @@ class RutinaTest extends FlatSpec with Matchers {
     nombreMejorRutina should equal("rutina con pesas 1")
   }
   
+  // TODO no usar null
   "un criterio cualquiera" should "obtener null si todas las rutinas son invalidas" in {
     val criterioSegunExperiencia = (estado : Estado) => {
       estado.pokemon.fuerza

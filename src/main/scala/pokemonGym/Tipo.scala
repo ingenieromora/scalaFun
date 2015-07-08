@@ -3,12 +3,13 @@ package pokemonGym
 /**
  * @author seb
  */
-abstract class Tipo(){
-  def leGanaA(otroTipo: Tipo): Boolean;
+// TODO es preferible un mixin (trait de scala) a un abstract class
+trait Tipo {
+  def leGanaA(otroTipo: Tipo): Boolean
 }
 
 case object Agua extends Tipo {
-  override def leGanaA(otroTipo: Tipo): Boolean = otroTipo match {
+  def leGanaA(otroTipo: Tipo) = otroTipo match {
     case Fuego | Tierra | Roca => true
     case _ => false
   }
@@ -92,10 +93,11 @@ case object Dragon extends Tipo{
   }
 }
 case object Normal extends Tipo{
-  override def leGanaA(otroTipo: Tipo): Boolean = return false
+  override def leGanaA(otroTipo: Tipo) = false
 }
+// TODO la piedra lunar es un caso particular, no es un tipo de pokemon (no existe como Tipo)
 case object Lunar extends Tipo{
-  override def leGanaA(otroTipo: Tipo): Boolean = return false
+  override def leGanaA(otroTipo: Tipo) = false
 }
 
 
