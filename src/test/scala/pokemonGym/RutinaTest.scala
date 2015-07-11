@@ -10,7 +10,7 @@ import org.scalatest.Matchers
 class RutinaTest extends FlatSpec with Matchers {
   
   "Un poke fantasma" should "quedar invalido despues rutina con pesas 1" in {
-      val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Especie.Gengar(), Nil, 60)
+      val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Gengar, Nil, 60)
       val gengarDespuesDeActividad = gim.ejecutar(OK(gengar), RutinaConPesas1)
       gengarDespuesDeActividad match {
         case Invalido(_, _) => 
@@ -19,7 +19,7 @@ class RutinaTest extends FlatSpec with Matchers {
   }
   
   "Un poke fantasma" should "quedar invalido despues rutina con pesas 2" in {
-    val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Especie.Gengar(), Nil, 60)
+    val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Gengar, Nil, 60)
     val gengarDespuesDeActividad = gim.ejecutar(OK(gengar), RutinaConPesas2)
     gengarDespuesDeActividad match {
       case Invalido(_, _) => 
@@ -28,7 +28,7 @@ class RutinaTest extends FlatSpec with Matchers {
   }
   
   "Un poke fantasma" should "quedar invalido despues rutina con pesas 3" in {
-    val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Especie.Gengar(), Nil, 60)
+    val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Gengar, Nil, 60)
     val gengarDespuesDeActividad = gim.ejecutar(OK(gengar), RutinaConPesas3)
     gengarDespuesDeActividad match {
       case Invalido(_, _) => 
@@ -37,7 +37,7 @@ class RutinaTest extends FlatSpec with Matchers {
   }
   
   "Un pokemon" should "quedar dormido despues rutina con descansar" in {
-    val ratata = Pokemon(1, 5, 1, 1, 1, 'F', Especie.Ratata(), List((Reposar, 400)), 1)
+    val ratata = Pokemon(1, 5, 1, 1, 1, 'F', Ratata, List((Reposar, 400)), 1)
     val ratataDespuesDeActividad = gim.ejecutar(OK(ratata), RutinaConDescansar)
     ratataDespuesDeActividad match {
       case Dormido(_, _) => 
@@ -46,7 +46,7 @@ class RutinaTest extends FlatSpec with Matchers {
   }
   
   "Un pokemon" should "quedar invalido despues rutina con ataque desconocido" in {
-    val ratata = Pokemon(1, 1, 1, 1, 1, 'F', Especie.Ratata(), List((Reposar, 400)), 1)
+    val ratata = Pokemon(1, 1, 1, 1, 1, 'F', Ratata, List((Reposar, 400)), 1)
     val ratataDespuesDeActividad = gim.ejecutar(OK(ratata), RutinaAtaqueFuriaDragon)
     ratataDespuesDeActividad match {
       case Invalido(_, _) => 
@@ -59,7 +59,7 @@ class RutinaTest extends FlatSpec with Matchers {
       estado.pokemon.experiencia
     }
     val listaDeRutinas = List(RutinaAtaqueFuriaDragon, RutinaConDescansar, RutinaConPesas1)
-    val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Especie.Charizard(), List((FuriaDragon, 4)), 55)
+    val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Charizard, List((FuriaDragon, 4)), 55)
     val nombreMejorRutina = gim.dameLaMejorRutina(OK(charizard), criterioSegunExperiencia, listaDeRutinas.toSeq : _ *)
     nombreMejorRutina.get should equal("rutina con furia dragon")
   }
@@ -69,7 +69,7 @@ class RutinaTest extends FlatSpec with Matchers {
       estado.pokemon.fuerza
     }
     val listaDeRutinas = List(RutinaAtaqueFuriaDragon, RutinaConDescansar, RutinaConPesas1)
-    val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Especie.Charizard(), Nil, 55)
+    val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Charizard, Nil, 55)
     val nombreMejorRutina = gim.dameLaMejorRutina(OK(charizard), criterioSegunExperiencia, listaDeRutinas.toSeq : _ *)
     nombreMejorRutina.get should equal("rutina con pesas 1")
   }
@@ -79,7 +79,7 @@ class RutinaTest extends FlatSpec with Matchers {
       estado.pokemon.fuerza
     }
     val listaDeRutinas = List(RutinaAtaqueFuriaDragon, RutinaConPesas2, RutinaConPesas1)
-    val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Especie.Gengar(), Nil, 60)
+    val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Gengar, Nil, 60)
     val nombreMejorRutina = gim.dameLaMejorRutina(OK(gengar), criterioSegunExperiencia, listaDeRutinas.toSeq : _ *)
     if (!nombreMejorRutina.isEmpty) fail("No deberia devolver ninguna rutina")
   }
