@@ -10,7 +10,7 @@ case class Ataque(
   efectoColateral: (Estado => Estado) = (estado) => estado)
 
 object Mordida extends Ataque(Normal, 30)
-object Enfocarse extends Ataque(Normal, 25, (estado) => estado.map((poke) => poke.aumentarVelocidad(1)))
+object Enfocarse extends Ataque(Normal, 25, (estado) => estado.map(_.aumentarVelocidad(1)))
 object Reposar extends Ataque(Normal, 20, (estado) => estado.flatMap((poke) => Dormido(poke.aumentarEnergiaAlMaximo())))
 object FuriaDragon extends Ataque(Dragon, 10)
 object Ascuas extends Ataque(Fuego, 25)
