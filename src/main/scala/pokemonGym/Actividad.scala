@@ -135,7 +135,7 @@ case object FingirIntercambio extends Actividad {
   def realizarActividad(estado:Estado) : Estado = {
     estado.map(poke => {
       poke.especie.condicionEvolutiva match {
-        case Intercambiar => poke.copy(especie = poke.especie.evolucion)
+        case Intercambiar => poke.copy(especie = poke.especie.evolucion.get)
         case _ => if (poke.genero.equals('M')) {
           poke.copy(peso = poke.peso + 1)
         } else {

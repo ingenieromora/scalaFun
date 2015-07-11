@@ -6,6 +6,9 @@ package pokemonGym
 // TODO es preferible un mixin (trait de scala) a un abstract class
 trait Tipo {
   def leGanaA(otroTipo: Tipo): Boolean
+  def leGanaA(otroTipo: Option[Tipo]): Boolean = {
+    otroTipo.exists(leGanaA(_))
+  }
 }
 
 case object Agua extends Tipo {
