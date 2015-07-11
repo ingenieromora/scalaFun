@@ -61,7 +61,7 @@ class RutinaTest extends FlatSpec with Matchers {
     val listaDeRutinas = List(RutinaAtaqueFuriaDragon, RutinaConDescansar, RutinaConPesas1)
     val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Especie.Charizard(), List((FuriaDragon, 4)), 55)
     val nombreMejorRutina = gim.dameLaMejorRutina(OK(charizard), criterioSegunExperiencia, listaDeRutinas.toSeq : _ *)
-    nombreMejorRutina should equal("rutina con furia dragon")
+    nombreMejorRutina.get should equal("rutina con furia dragon")
   }
   
   "un criterio segun fuerza" should "obtener la mejor rutina de la lista" in {
@@ -71,18 +71,17 @@ class RutinaTest extends FlatSpec with Matchers {
     val listaDeRutinas = List(RutinaAtaqueFuriaDragon, RutinaConDescansar, RutinaConPesas1)
     val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Especie.Charizard(), Nil, 55)
     val nombreMejorRutina = gim.dameLaMejorRutina(OK(charizard), criterioSegunExperiencia, listaDeRutinas.toSeq : _ *)
-    nombreMejorRutina should equal("rutina con pesas 1")
+    nombreMejorRutina.get should equal("rutina con pesas 1")
   }
   
-  // TODO no usar null
-  "un criterio cualquiera" should "obtener null si todas las rutinas son invalidas" in {
+  "un criterio cualquiera" should "obtener None si todas las rutinas son invalidas" in {
     val criterioSegunExperiencia = (estado : Estado) => {
       estado.pokemon.fuerza
     }
     val listaDeRutinas = List(RutinaAtaqueFuriaDragon, RutinaConPesas2, RutinaConPesas1)
     val gengar = Pokemon(300, 300, 1, 100, 200, 'F', Especie.Gengar(), Nil, 60)
     val nombreMejorRutina = gim.dameLaMejorRutina(OK(gengar), criterioSegunExperiencia, listaDeRutinas.toSeq : _ *)
-    nombreMejorRutina should equal(null)
+    if (!nombreMejorRutina.isEmpty) fail("No deberia devolver ninguna rutina")
   }
   
 }
