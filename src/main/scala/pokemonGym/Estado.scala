@@ -42,8 +42,7 @@ case class OK(val pokemon: Pokemon) extends Estado {
 }
 
 case class Invalido(val pokemon: Pokemon, val descripcion: String) extends Estado {
-  // TODO detalle: no tiene caso crear otro Invalido con los mismo datos, es lo mismo que retornar this
-  def map(f: (Pokemon => Pokemon)) = Invalido(pokemon, descripcion)
-  def filter(f: (Pokemon => Boolean)) = Invalido(pokemon, descripcion)
+  def map(f: (Pokemon => Pokemon)) = this
+  def filter(f: (Pokemon => Boolean)) = this
   def flatMap(f: (Pokemon => Estado )) = this
 }

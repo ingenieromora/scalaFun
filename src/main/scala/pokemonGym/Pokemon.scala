@@ -75,7 +75,13 @@ case class Pokemon(
   def aumentarVelocidad(aumento: Int) = copy(velocidad = velocidad + aumento)
   
   def validarAtaques(): Boolean = {
-    ataques.forall((ataque) => especie.tipoPrincipal == ataque._1.tipo || especie.tipoSecundario == ataque._1.tipo)
+    ataques.forall((ataque) => {
+      ataque._1.tipo match {
+            case Normal => true
+            case tipo if esDelTipo(tipo) => true
+            case _ => false
+          }
+    })
   }
   
   def aumentarEnergiaAlMaximo() : Pokemon = copy(energia = energiaMaxima)
@@ -102,8 +108,8 @@ case class Pokemon(
 
   def usarPiedra(tipoPiedra: Tipo): Pokemon ={
     val nuevaEspecie : Especie = especie.condicionEvolutiva match {
-      case UsarPiedraLunar() => if (tipoPiedra.equals(Lunar)) especie.evolucion else especie
-      case UsarPiedra() => if (tipoPiedra.equals(especie.tipoPrincipal)) especie.evolucion else especie
+      case UsarPiedraLunar => if (tipoPiedra.equals(Lunar)) especie.evolucion else especie
+      case UsarPiedra => if (tipoPiedra.equals(especie.tipoPrincipal)) especie.evolucion else especie
       case _ => especie
     }
     copy(especie = nuevaEspecie)

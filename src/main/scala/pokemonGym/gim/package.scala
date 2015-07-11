@@ -97,31 +97,31 @@ package object gim {
         }
 
         // TODO detalle: es más facil usar "_" para este tipo de funciones
-        case UsarPocion() => estadoActual.map(_.usarPocion())
+        case UsarPocion => estadoActual.map(_.usarPocion())
 
-        case ComerCalcio() => {
+        case ComerCalcio => {
           estadoActual.map(pokemon => pokemon.comerCalcio())
         }
 
-        case ComerZinc() => {
+        case ComerZinc => {
           estadoActual.map(pokemon => pokemon.comerZinc())
         }
 
-        case UsarAntidoto() => {
+        case UsarAntidoto => {
           estadoActual match {
             case estado @ Envenenado(_) => estado.flatMap(poke => OK(poke))
             case estado @ _ => estado
           }
         }
 
-        case UsarEther() => {
+        case UsarEther => {
           estadoActual match {
             case estado @ KO(_) => estado
             case estado => estado.flatMap(poke => OK(poke))
           }
         }
 
-        case Descansar() => {
+        case Descansar => {
           estadoActual match {
             case estado @ OK(_) =>
               if( estado.pokemon.energia < estado.pokemon.energiaMaxima / 2){
@@ -144,13 +144,30 @@ package object gim {
             }
           )
 
-        case FingirIntercambio() => estadoActual.map(poke => {
+        case FingirIntercambio => estadoActual.map(poke => {
           poke.especie.condicionEvolutiva match {
-            case Intercambiar() => poke.copy(especie= poke.especie.evolucion)
+            case Intercambiar => poke.copy(especie= poke.especie.evolucion)
             // TODO donde valida el peso máximo?
             case _ => if(poke.genero.equals('M')) poke.copy(peso = poke.peso + 1) else poke.copy(peso = poke.peso - 10)
           }
         })
+
+        case ComerHierro => estadoActual.map(poke => {
+          poke.copy(fuerza = poke.fuerza + 5)
+        	})
+
+        case AprenderAtaque(ataque) => 
+          ataque.tipo match {
+            case Normal => estadoActual.map(poke => {
+              poke.copy(ataques = (ataque, ataque.maximoPuntosAtaque) :: poke.ataques)
+            })
+
+            case tipo if estadoActual.pokemon.esDelTipo(tipo) => estadoActual.map(poke => {
+              poke.copy(ataques = (ataque, ataque.maximoPuntosAtaque) :: poke.ataques)
+            })
+            
+            case _ => estadoActual.flatMap(pokemon => KO(pokemon))
+          }
       }
 
       if (estadoDespuesDeActividad.pokemon.valido()) {
