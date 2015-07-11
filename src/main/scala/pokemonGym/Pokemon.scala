@@ -35,8 +35,10 @@ case class Pokemon(
 //  }
   def ganarExperiencia(exp: Int) : Pokemon = {
     val nivelesSubidos = getNivel(exp, especie.resistenciaEvolutiva) - getNivel(experiencia, especie.resistenciaEvolutiva)
-    subirDeNivel(nivelesSubidos)
+    subirDeNivel(nivelesSubidos).copy(experiencia = experiencia + exp)
   }
+  
+  def getNivel : Int = getNivel(experiencia, especie.resistenciaEvolutiva)
 
   def getNivel(experiencia:Int, resistenciaEvolutiva:Int) : Int = {
     if (resistenciaEvolutiva > experiencia) {

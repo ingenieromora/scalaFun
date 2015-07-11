@@ -14,7 +14,7 @@ class SubirDeNivelTest extends FlatSpec with Matchers {
   
   "Un pokemon" should "subir de nivel" in {
 	  val charmander = Pokemon(30, 30, 2, 4, 3, 'F', Charmander, Nil, 1)
-	  charmander.ganarExperiencia(351).nivel should be (2)
+	  charmander.ganarExperiencia(351).getNivel should be (2)
   }
   
   "Un pokemon" should "mejorar velocidad cuando sube de nivel" in {
