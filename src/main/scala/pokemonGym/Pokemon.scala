@@ -20,17 +20,6 @@ case class Pokemon(
 
   val MAXIMA_ENERGIA_RECOBRADA = 50
 
-//  def ganarExperiencia(exp: Int) : Pokemon = {
-//    val nivelAnterior = getNivel(experiencia, especie.resistenciaEvolutiva ) - 1
-//    val expParaSubirNivel = 2 * nivelAnterior * especie.resistenciaEvolutiva + especie.resistenciaEvolutiva
-//    //val expParaSubirNivel = 2 * (nivel - 1) * especie.resistenciaEvolutiva + especie.resistenciaEvolutiva
-//    val expRestante = expParaSubirNivel - experiencia
-//    if(exp >= expRestante){
-//      copy(experiencia = expParaSubirNivel).subirDeNivel().ganarExperiencia(exp - expRestante)
-//    } else {
-//      copy(experiencia = experiencia + exp)
-//    }
-//  }
   def ganarExperiencia(exp: Int) : Pokemon = {
     val nivelesSubidos = getNivel(exp, especie.resistenciaEvolutiva) - getNivel(experiencia, especie.resistenciaEvolutiva)
     subirDeNivel(nivelesSubidos).copy(experiencia = experiencia + exp)
