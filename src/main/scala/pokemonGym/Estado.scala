@@ -17,10 +17,21 @@ case class Envenenado(pokemon: Pokemon) extends Estado {
 }
 
 case class Dormido(pokemon: Pokemon, contador: Int = 3) extends Estado {
-  // TODO evaluar si no es mejor que éste map retorne un Dormido - 1 en vez de tener la lógica afuera
-  def map(f: (Pokemon => Pokemon)) = this
+  def map(f: (Pokemon => Pokemon)) = {
+    if (contador == 0) {
+      OK(f(pokemon))
+    } else {
+      Dormido(pokemon, contador - 1)
+    }
+  }
   def filter(f: (Pokemon => Boolean)) = if (f(pokemon)) this else Invalido(pokemon, "Fallo el filtrado")
-  def flatMap(f: (Pokemon => Estado )) = this
+  def flatMap(f: (Pokemon => Estado )) = {
+    if (contador == 0) {
+      f(pokemon)
+    } else {
+      Dormido(pokemon, contador - 1)
+    }
+  }
 }
 
 case class Paralizado(val pokemon: Pokemon) extends Estado {
