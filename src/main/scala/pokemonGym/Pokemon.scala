@@ -75,8 +75,12 @@ case class Pokemon(
   def aumentarVelocidad(aumento: Int) = copy(velocidad = velocidad + aumento)
   
   def validarAtaques(): Boolean = {
-    ataques.forall(ataque => {
-      esDelTipo(ataque._1.tipo)
+    ataques.forall((ataque) => {
+      ataque._1.tipo match {
+            case Normal => true
+            case tipo if esDelTipo(tipo) => true
+            case _ => false
+          }
     })
   }
   

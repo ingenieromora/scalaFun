@@ -3,7 +3,6 @@ package pokemonGym
 /**
  * @author seb
  */
-// TODO detalle: en las case clases por default todos sus parámetros son "val"
 case class Ataque(
   tipo: Tipo,
   maximoPuntosAtaque: Int,

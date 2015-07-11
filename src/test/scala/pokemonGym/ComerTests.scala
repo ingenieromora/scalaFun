@@ -20,4 +20,10 @@ class ComerTests extends FlatSpec with Matchers {
     val ataquesEsperados = List((FuriaDragon,6), (Ascuas, 10))
     charizarDespuesDeActividad.ataques should be (ataquesEsperados)
   }
+ 
+  "Un pokemon" should "come hierro y aumenta en 5 su fuerza" in {
+	  val charizard = Pokemon(150, 150, 30, 35, 25, 'F', Especie.Charizard(), List((FuriaDragon, 4), (Ascuas, 8)), 55)
+			  val charizarDespuesDeActividad = gim.ejecutar(OK(charizard), ComerHierro).pokemon
+			  charizarDespuesDeActividad.fuerza should be (40)
+  }
 }

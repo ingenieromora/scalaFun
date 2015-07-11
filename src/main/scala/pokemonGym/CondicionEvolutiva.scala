@@ -3,7 +3,6 @@ package pokemonGym
 /**
  * @author leandro.mora
  */
-// TODO es preferible un mixin (trait de scala) a un abstract class
 trait CondicionEvolutiva
 
 case class SubirDeNivel(nivel: Int) extends CondicionEvolutiva

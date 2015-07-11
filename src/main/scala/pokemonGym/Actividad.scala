@@ -36,6 +36,23 @@ case class RealizarAtaque(ataque: Ataque) extends Actividad {
   }
 }
 
+case class AprenderAtaque(ataque : Ataque) extends Actividad {
+  def realizarActividad(estado:Estado) : Estado = {
+    ataque.tipo match {
+      case Normal => estado.map(poke => {
+        poke.copy(ataques = (ataque, ataque.maximoPuntosAtaque) :: poke.ataques)
+      })
+
+      case tipo if estado.pokemon.esDelTipo(tipo) => estado.map(poke => {
+        poke.copy(ataques = (ataque, ataque.maximoPuntosAtaque) :: poke.ataques)
+      })
+      
+      case _ => estado.flatMap(pokemon => KO(pokemon))
+    }
+
+  }
+}
+
 case class LevantarPesas(kilos: Int) extends Actividad {
   def realizarActividad(estado:Estado) : Estado = {
     if (estado.pokemon.esDelTipo(Fantasma)) {
@@ -146,5 +163,10 @@ case object FingirIntercambio extends Actividad {
   }
 }
 
-// TODO Falta aprender ataque
-// TODO falta comer hierro
+object ComerHierro extends Actividad {
+  def realizarActividad(estado:Estado) : Estado = {
+    estado.map(poke => {
+      poke.copy(fuerza = poke.fuerza + 5)
+    })
+  }
+}
