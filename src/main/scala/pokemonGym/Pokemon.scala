@@ -13,8 +13,6 @@ case class Pokemon(
     especie: Especie,
     // TODO es más facil usar un mapa (que de hecho también es una función "key => valor") 
     ataques: List[(Ataque, Int)],
-    // TODO el nivel está en función de la experiencia y la especie (debería ser calculado)
-    nivel: Int = 1,
     experiencia: Int = 0) {
   
   require(validarAtaques(), "Los ataques no son ni del tipo principal $especie.tipoPrincipal" +
@@ -81,30 +79,24 @@ case class Pokemon(
     valido &= fuerza > 0
     valido &= energia >= 0
     valido &= velocidad > 0
-    valido &= nivel > 0
+    valido &= getNivel(experiencia, especie.resistenciaEvolutiva ) > 0
     valido &= experiencia >= 0
     valido &= peso > 0
     valido
   }
 
-  def subirDeNivel() = {
-    //TODO REMOVE!
-      val nuevoPoke = copy(nivel = nivel + 1,
-      fuerza = fuerza + especie.aumentoFuerza,
-      velocidad = velocidad + especie.aumentoVelocidad,
-      peso = peso + especie.aumentoPeso,
-      energiaMaxima = energiaMaxima + especie.aumentoEnergiaMaxima).aumentarEnergiaAlMaximo()
-      if (nuevoPoke.valido()) nuevoPoke else this
-  }
-
 
   def subirDeNivel(nivelesSubidos:Int) = {
-    val nuevoPoke = copy(fuerza = (fuerza + especie.aumentoFuerza) * nivelesSubidos,
-                    velocidad = (velocidad + especie.aumentoVelocidad) * nivelesSubidos,
-                    peso = (peso + especie.aumentoPeso) * nivelesSubidos,
-                    energiaMaxima = (energiaMaxima + especie.aumentoEnergiaMaxima ) * nivelesSubidos)
-                    .aumentarEnergiaAlMaximo()
-    if (nuevoPoke.valido()) nuevoPoke else this
+    if(nivelesSubidos == 0){
+      this
+    }else {
+      val nuevoPoke = copy(fuerza = (fuerza + especie.aumentoFuerza) * nivelesSubidos,
+        velocidad = (velocidad + especie.aumentoVelocidad) * nivelesSubidos,
+        peso = (peso + especie.aumentoPeso) * nivelesSubidos,
+        energiaMaxima = (energiaMaxima + especie.aumentoEnergiaMaxima ) * nivelesSubidos)
+        .aumentarEnergiaAlMaximo()
+      if (nuevoPoke.valido()) nuevoPoke else this
+    }
   }
 
   def aumentarVelocidad(aumento: Int) = copy(velocidad = velocidad + aumento)

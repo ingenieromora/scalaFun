@@ -56,7 +56,7 @@ class RealizarAtaqueTest extends FlatSpec with Matchers {
 	  estadoRatataDspAct match {
 		  case Dormido(poke, _) =>  {
         poke match {
-          case Pokemon(_, _, _, _, _, _, _, a1::cola, _, _) => a1._2 shouldEqual 399
+          case Pokemon(_, _, _, _, _, _, _, a1::cola, _) => a1._2 shouldEqual 399
         }
 		  }
 	  }
@@ -68,7 +68,7 @@ class RealizarAtaqueTest extends FlatSpec with Matchers {
 	  estadoRatataDspAct match {
 		  case Dormido(poke, _) =>  {
 			  poke match {
-			    case Pokemon(_, _, _, _, _, _, _, a1::a2::cola, _, _) => a2._2 shouldEqual 2
+			    case Pokemon(_, _, _, _, _, _, _, a1::a2::cola, _) => a2._2 shouldEqual 2
 			  }
 		  }
 	  }
@@ -81,7 +81,7 @@ class RealizarAtaqueTest extends FlatSpec with Matchers {
 	  estadoRatataDspAct match {
   	  case OK(poke) =>  {
   		  poke match {
-  		  case Pokemon(_, _, _, _, _, _, _, a1::a2::cola, _, _) => a1._2 shouldEqual 1
+  		  case Pokemon(_, _, _, _, _, _, _, a1::a2::cola, _) => a1._2 shouldEqual 1
   		  }
   	  }
 	  }
