@@ -13,6 +13,7 @@ case class Especie(
     aumentoPeso: Int,
     aumentoFuerza: Int,
     aumentoEnergiaMaxima: Int,
+    // TODO condicion evolutiva podría ser un option (o estar junto a la evolución)
     condicionEvolutiva: CondicionEvolutiva,
     evolucion: Option[Especie]) {
 }

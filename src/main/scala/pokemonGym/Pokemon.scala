@@ -124,6 +124,8 @@ case class Pokemon(
 
   def usarPiedra(tipoPiedra: Tipo): Pokemon ={
     val nuevaEspecie : Especie = especie.condicionEvolutiva match {
+      // TODO cuando se usa un Option.get (especie.evolucion.get) es más evidente que está atado al option
+      //  de condición evolutiva
       case UsarPiedraLunar => if (tipoPiedra.equals(Lunar)) especie.evolucion.get else especie
       case UsarPiedra => if (tipoPiedra.equals(especie.tipoPrincipal)) especie.evolucion.get else especie
       case _ => especie
