@@ -1,0 +1,35 @@
+## Conditional expressions
+
+```Scala
+
+def abs(x:Int) = if (x >= 0) x else -x
+
+// it is used for expressions
+//x >= 0 is a predicate
+
+```
+
+## Boolean expressions
+
+```Scala
+true false
+!b
+b && b
+b || b
+```
+
+## Value definition
+
+
+```Scala
+
+val y = square (x) // "by value" - the right side is evaluated at the point of the definition itself
+
+
+def loop: Boolean = loop //"by name"
+
+def x = loop //
+
+val x = loop // dies the REPL because it loop infinitely
+
+```
