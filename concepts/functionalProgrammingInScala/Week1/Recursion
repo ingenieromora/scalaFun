@@ -1,0 +1,40 @@
+#Recursion
+
+### There are different type of recursion
+
+```Scala
+
+factiorial(n: Int): Int =
+  if (n == 1) 1 else n * factorial(n - 1)
+```
+This function is substituted in the following way:
+
+---> factorial(4)
+
+---> if (4 == 0) 1 else 4 *  factorial ( 4 - 1 )
+
+---> 4 * factorial(3)
+
+--> 4 * 3 * factorial(2)
+
+--> 4 * 3 * 2 * factorial(1)
+
+--> 4 * 3 * 2 * 1
+
+--> 120
+
+## Tail Recursion
+
+If a function calls itself as its **last action**, the function's stack frame can be reused.
+This is called **tail recursion**
+
+In general, if the last action of a function consists of calling a function (which may be the same),
+**one stack frame would be sufficient for both**.
+Such calls are called _tail calls_
+
+```Scala
+
+factiorial(n: Int): Int = {
+if (n == 1) 1 else n * factorial(n - 1)
+}
+```

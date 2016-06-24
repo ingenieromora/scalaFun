@@ -1,0 +1,23 @@
+It is a good practice to show only the functions that needs to be shown to the user.
+Auxiliary functions should not be shown to the final user.
+
+For that we can use *blocks*
+
+We have 2 intuitive principles:
+1) The variables outside the block can be accessible inside the block
+2) The same variable inside the block _shows_ the inside block
+
+Exercise ¿ Which is the result of the variable _result_?
+```Scala
+
+val x = 0
+
+def f(y: Int) = y +1
+
+val result = {
+  val x = f(3);
+  x * x
+} + x
+
+```
+The result is: 16
